@@ -155,7 +155,11 @@ class RingQueue{
 
         // Accessors. Note: 'back()' is not considered part of the array.
         ItemType front() const { 
-            if ( ring_size == 0 ) std::cerr<< "Warning: Empty ring!\n" ;
+            if ( ring_size == 0 ){
+                throw std::invalid_argument("Attempting to dereference invalid_argument");
+                std::cerr<< "Warning: Empty ring!\n" ;
+
+            } 
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             // Feel free to throw instead...
             
@@ -179,7 +183,7 @@ class RingQueue{
         void push_back( const ItemType& value ){
             buffer[end_index()] = value;
             if ( begin_index == end_index() && ring_size == MAX_SIZE){
-                ++begin_index;
+                begin_index=++begin_index%MAX_SIZE;
                 return;
             }
 
@@ -189,7 +193,7 @@ class RingQueue{
         void pop_front(){
             if ( ring_size == 0 )
                 throw std::invalid_argument("Attempting to call pop_front() on an empty list.");
-            ++begin_index;
+            begin_index = (begin_index < MAX_SIZE)?begin_index+1:0;
             --ring_size;
             return;
         }
